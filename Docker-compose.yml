@@ -1,0 +1,51 @@
+version: "2.1"
+services:
+  influxdb:
+    image: tutum/influxdb
+    container_name: influxdb
+    healthcheck:
+      test: "curl -f http://localhost:8086/ping"
+      interval: 3s
+      timeout: 10s
+      retries: 5
+    ports:
+      - 8086:8086
+      - 8083:8083
+    environment:
+      - PRE_CREATE_DB=test
+
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    links:
+      - influxdb
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    ports:
+      - 24224:24224
+
+  grafana:
+    build:
+      context: ./grafana
+      args:
+        DOWNLOAD_URL: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana_4.2.0_amd64.deb 
+    container_name: grafana
+    ports:
+      - 3000:3000
+    links:
+      - influxdb
+    # volumes:
+    #   - /var/lib/grafana:/var/lib/grafana
+    # environment:
+    #   - GF_SECURITY_ADMIN_PASSWORD=secret
+
+  node:
+    build: ./node
+    container_name: node
+    depends_on:
+      - fluentd
+    ports:
+      - 8000:8000
+    logging:
+      driver: "fluentd"
