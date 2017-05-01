@@ -1,4 +1,4 @@
-FROM node:6
+FROM node:7
 
 MAINTAINER Shaun Warman <https://github.com/shaunwarman>
 
@@ -6,4 +6,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["node", "/app/index.js"]
+CMD ["node", "/app/test.js"]

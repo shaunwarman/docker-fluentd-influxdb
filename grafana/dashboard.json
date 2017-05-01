@@ -1,7 +1,7 @@
 {
   "__inputs": [
     {
-      "name": "DS_INFLUX",
+      "name": "influx",
       "label": "influx",
       "description": "",
       "type": "datasource",
@@ -47,7 +47,7 @@
         {
           "aliasColors": {},
           "bars": false,
-          "datasource": "${DS_INFLUX}",
+          "datasource": "influx",
           "fill": 1,
           "id": 1,
           "legend": {
